@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Assignment1</string>
+    <string name="username">username</string>
+    <string name="password">password</string>
+    <string name="login">login</string>
+    <string name="product_image">product_image</string>
+    <string name="product_price">Price: $%d</string>
+    <string name="product_expiry">Expires: %s</string>
+
 </resources>

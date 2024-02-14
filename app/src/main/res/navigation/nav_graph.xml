@@ -5,6 +5,7 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/loginFragment">
 
+
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.cs4520.assignment1.LoginFragment"
@@ -14,9 +15,10 @@
             app:destination="@id/productListFragment" />
     </fragment>
 
-    <fragment
-        android:id="@+id/productListFragment"
-        android:name="com.cs4520.assignment1.ProductListFragment"
-        android:label="ProductListFragment">
-    </fragment>
+
+        <fragment
+            android:id="@+id/productListFragment"
+            android:name="com.cs4520.assignment1.ProductListFragment"
+            android:label="ProductListFragment">
+        </fragment>
 </navigation>
