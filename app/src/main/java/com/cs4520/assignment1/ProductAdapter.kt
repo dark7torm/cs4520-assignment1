@@ -24,7 +24,6 @@ class ProductAdapter(private val productList: List<List<Any?>>) :
 
     class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(productDetails: List<Any?>) {
-            // Example binding assuming the order is Name, Type, Expiry (optional), Price
             val productName = itemView.findViewById<TextView>(R.id.product_name)
             val productPrice = itemView.findViewById<TextView>(R.id.product_price)
             val productExpiry = itemView.findViewById<TextView>(R.id.product_expiry)
@@ -34,15 +33,15 @@ class ProductAdapter(private val productList: List<List<Any?>>) :
             val price = productDetails[3] as? Int ?: 0
             productPrice.text = itemView.context.getString(R.string.product_price, price)
 
-            // Determine type to set image and background
+
             when (productDetails[1] as? String) {
                 "Equipment" -> {
-                    itemView.setBackgroundColor(Color.parseColor("#E06666")) // Light RED
-                    productImage.setImageResource(R.drawable.tools) // Placeholder
+                    itemView.setBackgroundColor(Color.parseColor("#E06666"))
+                    productImage.setImageResource(R.drawable.equipment)
                 }
                 "Food" -> {
-                    itemView.setBackgroundColor(Color.parseColor("#FFD965")) // Light YELLOW
-                    productImage.setImageResource(R.drawable.food) // Placeholder
+                    itemView.setBackgroundColor(Color.parseColor("#FFD965"))
+                    productImage.setImageResource(R.drawable.food)
                     productDetails[2]?.let {
                         productExpiry.visibility = View.VISIBLE
                         productExpiry.text = itemView.context.getString(R.string.product_expiry, it as String)
