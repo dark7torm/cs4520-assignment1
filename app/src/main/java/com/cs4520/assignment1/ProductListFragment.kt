@@ -1,34 +1,55 @@
 package com.cs4520.assignment1
-import ProductAdapter
-import androidx.recyclerview.widget.RecyclerView
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.cs4520.assignment1.Product
+import com.cs4520.assignment1.databinding.FragmentProductListBinding
+import kotlinx.coroutines.*
 
 class ProductListFragment : Fragment() {
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var viewAdapter: RecyclerView.Adapter<*>
-    private lateinit var viewManager: RecyclerView.LayoutManager
+    private var binding: FragmentProductListBinding? = null
+    private var adapter: ProductAdapter? = null
+    private var currentPage: Int? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_product_list, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = FragmentProductListBinding.inflate(inflater, container, false)
+        val view = binding?.root
 
-        viewManager = LinearLayoutManager(context)
-        viewAdapter = ProductAdapter(productsDataset)
-
-        recyclerView = view.findViewById<RecyclerView>(R.id.product_list_recyclerview).apply {
-            setHasFixedSize(true)
-            layoutManager = viewManager
-            adapter = viewAdapter
+        adapter = ProductAdapter(emptyList())
+        binding?.productListRecyclerview?.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = this@ProductListFragment.adapter
         }
 
+        fetchProducts(currentPage)
+
         return view
+    }
+
+    private fun fetchProducts(page: Int?) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val productList = RetrofitInstance.productService.getProducts(page)
+                withContext(Dispatchers.Main) {
+                    if(productList.isEmpty()) {
+                        binding?.productListRecyclerview?.visibility = View.GONE
+                        binding?.noProductsTextView?.visibility = View.VISIBLE
+                    } else {
+                        adapter?.updateData(productList)
+                    }
+
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 }

@@ -1,60 +1,48 @@
 package com.cs4520.assignment1
+
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-
+import com.cs4520.assignment1.databinding.FragmentLoginBinding
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
-    private lateinit var mainActivity: MainActivity
-    private lateinit var editTextUsername: EditText
-    private lateinit var editTextPassword: EditText
-    private lateinit var loginButton: Button
-
+    private var _binding: FragmentLoginBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: android.view.LayoutInflater,
+        container: android.view.ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_login, container, false)
+        _binding = FragmentLoginBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        editTextUsername = view.findViewById(R.id.usernameEditText)
-        editTextPassword = view.findViewById(R.id.passwordEditText)
-        loginButton = view.findViewById(R.id.loginButton)
-
-
-        loginButton.setOnClickListener {
+        binding.loginButton.setOnClickListener {
             login()
         }
-
-
-        return view
     }
 
-
     private fun login() {
-        val username = editTextUsername.text.toString()
-        val password = editTextPassword.text.toString()
-        val duration = Toast.LENGTH_SHORT
-        val message = "Invalid username or password"
-        val toast = Toast.makeText(context, message, duration)
-
+        val username = binding.usernameEditText.text.toString()
+        val password = binding.passwordEditText.text.toString()
 
         if (password == "admin" && username == "admin") {
-            editTextUsername.text.clear();
-            editTextPassword.text.clear();
+            binding.usernameEditText.text.clear()
+            binding.passwordEditText.text.clear()
             findNavController().navigate(R.id.action_loginFragment_to_productListFragment)
         } else {
-            toast.show();
+            Toast.makeText(context, "Invalid username or password", Toast.LENGTH_SHORT).show()
         }
     }
 
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

@@ -1,3 +1,5 @@
+package com.cs4520.assignment1
+
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -5,9 +7,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.cs4520.assignment1.R
 
-class ProductAdapter(private val productList: List<List<Any?>>) :
+class ProductAdapter(private var productList: List<Product>) :
     RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
@@ -16,25 +17,26 @@ class ProductAdapter(private val productList: List<List<Any?>>) :
     }
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
-        val product = productList[position]
-        holder.bind(product)
+        holder.bind(productList[position])
     }
 
     override fun getItemCount(): Int = productList.size
 
+    fun updateData(newProducts: List<Product>) {
+        productList = newProducts
+        notifyDataSetChanged()
+    }
     class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(productDetails: List<Any?>) {
+        fun bind(product: Product) {
             val productName = itemView.findViewById<TextView>(R.id.product_name)
             val productPrice = itemView.findViewById<TextView>(R.id.product_price)
             val productExpiry = itemView.findViewById<TextView>(R.id.product_expiry)
             val productImage = itemView.findViewById<ImageView>(R.id.product_image)
 
-            productName.text = productDetails[0] as? String ?: "Unknown"
-            val price = productDetails[3] as? Int ?: 0
-            productPrice.text = itemView.context.getString(R.string.product_price, price)
+            productName.text = product.name
+            productPrice.text = String.format(itemView.context.getString(R.string.product_price), product.price)
 
-
-            when (productDetails[1] as? String) {
+            when (product.type) {
                 "Equipment" -> {
                     itemView.setBackgroundColor(Color.parseColor("#E06666"))
                     productImage.setImageResource(R.drawable.equipment)
@@ -42,9 +44,9 @@ class ProductAdapter(private val productList: List<List<Any?>>) :
                 "Food" -> {
                     itemView.setBackgroundColor(Color.parseColor("#FFD965"))
                     productImage.setImageResource(R.drawable.food)
-                    productDetails[2]?.let {
+                    product.expiryDate?.let {
                         productExpiry.visibility = View.VISIBLE
-                        productExpiry.text = itemView.context.getString(R.string.product_expiry, it as String)
+                        productExpiry.text = itemView.context.getString(R.string.product_expiry, it)
                     } ?: run { productExpiry.visibility = View.GONE }
                 }
             }
