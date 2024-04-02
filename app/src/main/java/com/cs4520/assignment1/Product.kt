@@ -6,4 +6,3 @@ data class Product(
     val expiryDate: String?,
     val price: Double
 )
-

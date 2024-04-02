@@ -24,29 +24,29 @@ class ProductListFragment : Fragment() {
             adapter = this@ProductListFragment.adapter
         }
 
-        fetchProducts(currentPage)
+        fetchProducts()
 
         return view
     }
 
-    private fun fetchProducts(page: Int?) {
+    private fun fetchProducts() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val productList = RetrofitInstance.productService.getProducts(page)
+                val productList = RetrofitInstance.productService.getProducts()
                 withContext(Dispatchers.Main) {
-                    if(productList.isEmpty()) {
+                    if (productList.isEmpty()) {
                         binding?.productListRecyclerview?.visibility = View.GONE
                         binding?.noProductsTextView?.visibility = View.VISIBLE
                     } else {
                         adapter?.updateData(productList)
                     }
-
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
